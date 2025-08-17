@@ -3,21 +3,21 @@ name: Go Build and Release
 on:
   push:
     branches:
-      - master   # فعال شدن workflow هنگام push به branch master
+      - master
   pull_request:
     branches:
-      - master   # فعال شدن workflow هنگام ایجاد pull request به branch master
+      - master
   release:
-    types: [created]  # فعال شدن workflow هنگام ایجاد یک Release جدید
+    types: [created]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # اجرای این کار روی سیستم عامل Ubuntu
+    runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        goos: [linux, windows, darwin]  # سیستم عامل‌ها: لینوکس، ویندوز، مک
-        goarch: [amd64]  # معماری: 64 بیتی
+        goos: [linux, windows, darwin]
+        goarch: [amd64]
 
     steps:
       - name: Checkout code
