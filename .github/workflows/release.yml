@@ -1,0 +1,50 @@
+name: Go Cross-Platform Executable Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64]
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Set Output Names
+        id: vars
+        run: |
+          BINARY_NAME="GoCalc"
+          ASSET_NAME="${{ github.event.repository.name }}-${{ matrix.goos }}-${{ matrix.goarch }}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            BINARY_NAME+=".exe"
+            ASSET_NAME+=".exe"
+          fi
+          echo "binary_name=${BINARY_NAME}" >> $GITHUB_ENV
+          echo "asset_name=${ASSET_NAME}" >> $GITHUB_ENV
+
+      - name: Build Go Application
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: go build -v -o ${{ env.binary_name }} -trimpath ./src/GoCalc.go
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ env.binary_name }}
+          asset_name: ${{ env.asset_name }}
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
