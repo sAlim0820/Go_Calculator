@@ -23,7 +23,7 @@ A simple, interactive, and colorful command-line calculator built with Go. Perfe
 
 Here's a quick look at `GoCalc` in action. The application clears the screen for a fresh menu after each calculation.
 
-```sh
+```
  __| |_____________________________________________________________________| |__
  __   _____________________________________________________________________   __
    | |                                                                       | |
